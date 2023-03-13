@@ -1,0 +1,38 @@
+body{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.calculator{
+    margin-top: 150px;
+    width: 350px;
+    height: 600px;
+    padding: 12px;
+    border:2px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.display{
+    margin-top: 40px;
+    padding: 20px;
+    border: 2px solid black;
+    text-align: end;
+}
+.comands{
+  display: grid;
+  grid-template-columns:repeat(2,auto);
+  gap: 5px;
+}
+.comand{
+    height: 50px;
+}
+
+.keyboard{
+    display:grid;
+    grid-template-columns:repeat(4,auto);
+    gap: 5px;
+}
+.keys{
+    height: 50px;
+}
