@@ -41,8 +41,10 @@ function fillFirstDisplayFirsTime (){
 }
 const decimal=document.querySelector(".decimal")
 const display1=document.querySelector(".display1")
+
 const numButtons=document.querySelectorAll(".num");
 numButtons.forEach(number=>number.addEventListener("click", fillFirstDisplayFirsTime))
+
 let operatorVar="";
 let currentNum="";
 let secondNum="";
@@ -87,6 +89,20 @@ equals.addEventListener("click",()=>{
 
 const clear=document.querySelector(".clear");
 clear.addEventListener("click",()=>{location.reload()})
+
+const del=document.querySelector(".delete");
+del.addEventListener("click",()=>{
+    if(display1.textContent==firstNum){
+        let len=firstNum.length
+        firstNum=firstNum.slice(0,len-1);
+        display1.textContent=firstNum;
+    }
+    if(display1.textContent==secondNum){
+        let len=secondNum.length
+        secondNum=secondNum.slice(0,len-1);
+        display1.textContent=secondNum;
+    }
+})
 
 
 
