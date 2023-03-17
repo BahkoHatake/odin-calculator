@@ -1,79 +1,98 @@
-let firstNum=""
+let inputNum=""
 const decimal=document.querySelector(".decimal")
 const display1=document.querySelector(".display1")
-function fillFirstDisplayFirsTime (){
-    firstNum+=this.value
-    display1.textContent=firstNum;
+function takeNumberInput (key){
+    if (equa){return}
+    if(Number.isInteger(key)){
+        inputNum+=key
+    }
+    else{inputNum+=this.value}
+
+    display1.textContent=inputNum;
     if (this.value==="."){
-        decimal.removeEventListener("click",fillFirstDisplayFirsTime)}
+        decimal.removeEventListener("click",takeNumberInput)};
 }
 const numButtons=document.querySelectorAll(".num");
-numButtons.forEach(number=>number.addEventListener("click", fillFirstDisplayFirsTime))
-
+numButtons.forEach(number=>number.addEventListener("click", takeNumberInput))
+let equa="";
 let operatorVar="";
-let currentNum="";
+let firstNum="";
 let secondNum="";
-let currentOperation="";
-function addEventListenerOperator(){
-    operatorVar=this.value;
-    if (operatorVar===currentOperation||currentOperation==="") {   
-        currentNum=operate(operatorVar,firstNum,secondNum);
-        display2.textContent=currentNum+operatorVar;}
+let currentOperator="";
+function setOperator(x){
+    equa=false;
+    if(typeof x==="string")
+    {operatorVar=x}
     else{
-        currentNum=operate(currentOperation,firstNum,secondNum);
-        display2.textContent=currentNum+operatorVar;
-    }
-    display1.textContent="";
-    firstNum=currentNum;
-    secondNum="";
-    currentOperation=operatorVar
-    numButtons.forEach(number=>number.removeEventListener("click", fillFirstDisplayFirsTime))
-    numButtons.forEach(number=>number.addEventListener("click",makeSecondVar))
-}
-function makeSecondVar(){
-    secondNum+=this.value;
-    display1.textContent=secondNum;
-    if (this.value==="."){
-        decimal.removeEventListener("click",makeSecondVar)}
+    operatorVar=this.value;}
+    decideInputNum();
+    if (operatorVar===currentOperator||currentOperator==="") {   
+        firstNum=operate(operatorVar,firstNum,secondNum);}
+    else{
+        firstNum=operate(currentOperator,firstNum,secondNum);
+    } 
+    display2.textContent=firstNum+operatorVar;
+    inputNum="";
+    currentOperator=operatorVar;
 }
 const display2=document.querySelector(".display2");
 const operatorButtons=document.querySelectorAll(".operator");
-operatorButtons.forEach(operator=>operator.addEventListener("click",addEventListenerOperator));
+operatorButtons.forEach(operator=>operator.addEventListener("click",setOperator));
 
 function evaluate(){
-    if(firstNum===""){
-        return
-    }
-    if(secondNum===""){
-        display2.textContent=firstNum+"=";
-    }
-    else{display2.textContent=firstNum+currentOperation+secondNum+"=";}
-    let result=operate(currentOperation,firstNum,secondNum)
+    if(currentOperator==""){
+        console.log(true)
+        return}
+    decideInputNum();
+    if(secondNum==""){
+        console.log(true)
+        return}
+    let result=operate(currentOperator,firstNum,secondNum)
+    display2.textContent=firstNum+operatorVar+secondNum+"=";
     display1.textContent=result
-    numButtons.forEach(number=>number.removeEventListener("click",makeSecondVar));
-    numButtons.forEach(number=>number.removeEventListener("click", fillFirstDisplayFirsTime))
+    firstNum=result
+    inputNum=""
+    equa=true
 }
 let equals = document.querySelector(".equals");
 equals.addEventListener("click",evaluate)
 
-const clear=document.querySelector(".clear");
-clear.addEventListener("click",()=>{location.reload()})
+function clear(){
+    inputNum="";
+    firstNum="";
+    secondNum="";
+    operatorVar="";
+    currentOperator="";
+    display1.textContent="";
+    display2.textContent="";
+    equa="";
+}
+const clearBut=document.querySelector(".clear");
+clearBut.addEventListener("click",clear)
 
 function backspace(){
-    if(display1.textContent==firstNum){
-        let len=firstNum.length
-        firstNum=firstNum.slice(0,len-1);
-        display1.textContent=firstNum;
-    }
-    if(display1.textContent==secondNum){
-        let len=secondNum.length
-        secondNum=secondNum.slice(0,len-1);
-        display1.textContent=secondNum;
-    }
+    let len=inputNum.length
+    inputNum=inputNum.slice(0,len-1);
+    display1.textContent=inputNum;
 }
 const del=document.querySelector(".delete");
 del.addEventListener("click",backspace)
 
+window.addEventListener('keydown', handleKeyboardInput)
+function handleKeyboardInput(e) {
+    if (e.key >= 0 && e.key <= 9) takeNumberInput(Number(e.key))
+    if (e.key === '=' || e.key === 'Enter') evaluate()
+    if (e.key === 'Backspace') backspace()
+    if (e.key === 'Escape') clear()
+    if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/')
+      setOperator(convertOperator(e.key))
+  }
+  function convertOperator(keyboardOperator) {
+    if (keyboardOperator === '/') return '÷'
+    if (keyboardOperator === '*') return '×'
+    if (keyboardOperator === '-') return '-'
+    if (keyboardOperator === '+') return '+'
+  }
 function add(x,y){
     return Number(x)+Number(y)
 }
@@ -105,5 +124,15 @@ function operate(operator,x,y){
         }
         res= divide(x,y)
     }
-    return res.toFixed(8).replace(/\.?0+$/, "")
+    if(res===null){
+        return}
+    else{
+    return res.toFixed(8).replace(/\.?0+$/, "")}}
+function decideInputNum(){
+    if(firstNum==""){
+        firstNum=inputNum;
+    }
+    else{
+        secondNum=inputNum;
+    }
 }
